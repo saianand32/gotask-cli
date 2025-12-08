@@ -1,6 +1,8 @@
 package helper
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"os"
 	"path/filepath"
 )
@@ -27,4 +29,14 @@ func InitPaths(paths []string) error {
 		}
 	}
 	return nil
+}
+
+// GenerateCryptoID creates a random 32-character hexadecimal string.
+// It generates 16 bytes of random data and encodes it in hexadecimal format.
+func GenerateCryptoID() (string, error) {
+	bytes := make([]byte, 16)
+	if _, err := rand.Read(bytes); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(bytes), nil
 }

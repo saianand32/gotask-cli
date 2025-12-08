@@ -12,6 +12,8 @@ import (
 type FileStorageHandler interface {
 	Read(fileName string) ([]models.Item, error)
 	Write(fileName string, data []models.Item) error
+	GetDataFolder() string
+	GetGroupFile() string
 }
 
 type fs struct {
@@ -70,4 +72,12 @@ func (fs *fs) Write(fileName string, data []models.Item) error {
 	}
 
 	return nil
+}
+
+func (fs *fs) GetDataFolder() string {
+	return fs.DataFolder
+}
+
+func (fs *fs) GetGroupFile() string {
+	return fs.GroupFile
 }

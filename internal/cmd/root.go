@@ -5,11 +5,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
-	Use:   "gotask",
-	Short: "Gotask CLI",
+var (
+	rootCmd *cobra.Command
+	fc      factory.Factory
+)
+
+func Execute(fact factory.Factory) {
+	fc = fact
+	cobra.CheckErr(rootCmd.Execute())
 }
 
-func Execute(f factory.Factory) {
-	cobra.CheckErr(rootCmd.Execute())
+func init() {
+	rootCmd = &cobra.Command{
+		Use:   "gotask",
+		Short: "Gotask CLI",
+	}
+
+	// Subcommands
+	rootCmd.AddCommand(addCmd)
+	rootCmd.AddCommand(useGroupCmd)
 }
