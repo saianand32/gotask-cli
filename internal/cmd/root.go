@@ -24,4 +24,5 @@ func init() {
 	// Subcommands
 	rootCmd.AddCommand(addCmd)
 	rootCmd.AddCommand(useGroupCmd)
+	rootCmd.AddCommand(lsCmd)
 }

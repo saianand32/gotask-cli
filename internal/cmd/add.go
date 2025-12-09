@@ -20,7 +20,6 @@ var addCmd = &cobra.Command{
 		}
 
 		ge := fc.GroupsExecutor(fs)
-
 		te := fc.TasksExecutor(fs, ge)
 		if err = te.Add(description); err != nil {
 			return err
