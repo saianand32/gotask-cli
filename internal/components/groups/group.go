@@ -7,10 +7,12 @@ import (
 	"strings"
 
 	"github.com/saianand32/gotask-cli/internal/filestorage"
+	"github.com/saianand32/gotask-cli/internal/helper"
 )
 
 type GroupsExecutor interface {
 	GetCurrentGroup() (string, error)
+	ListGroups() error
 	CreateGroup(group string) error
 }
 
@@ -39,6 +41,37 @@ func (g *groups) GetCurrentGroup() (string, error) {
 		return "", fmt.Errorf("no group selected. use 'usegrp <group_name>' to select a group")
 	}
 	return group, nil
+}
+
+// ListGroups lists all available groups by scanning the DataFolder for JSON files.
+// The current group is highlighted in blue when listed.
+func (g *groups) ListGroups() error {
+	dirEntries, err := os.ReadDir(g.fs.GetDataFolder())
+	if err != nil {
+		return fmt.Errorf("couldn't list groups: %v", err)
+	}
+
+	currentGroup, _ := g.GetCurrentGroup()
+	noGroupsText := ""
+
+	if len(dirEntries) == 0 {
+		noGroupsText = "(no groups available)"
+	}
+
+	fmt.Println("Available groups:", noGroupsText)
+	for _, entry := range dirEntries {
+		if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".json") {
+			groupName := strings.TrimSuffix(entry.Name(), ".json")
+
+			if groupName == currentGroup {
+				fmt.Println("- " + helper.Green(groupName))
+			} else {
+				fmt.Println("- " + groupName)
+			}
+		}
+	}
+
+	return nil
 }
 
 // CreateGroup creates a new group by storing the group name in the GroupFile and

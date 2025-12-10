@@ -9,7 +9,7 @@ import (
 var addCmd = &cobra.Command{
 	Use:   "add [task]",
 	Short: "Add a new task",
-	Long:  "Add a new task with a description to your task list.",
+	Long:  "Add a new task with a description to your task list",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		description := args[0]

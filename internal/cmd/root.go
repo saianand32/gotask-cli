@@ -21,8 +21,13 @@ func init() {
 		Short: "Gotask CLI",
 	}
 
-	// Subcommands
-	rootCmd.AddCommand(addCmd)
+	// --- Subcommands ---
+
+	// - group commands -
 	rootCmd.AddCommand(useGroupCmd)
+	rootCmd.AddCommand(showGroupCmd)
+
+	// - task commands -
+	rootCmd.AddCommand(addCmd)
 	rootCmd.AddCommand(lsCmd)
 }

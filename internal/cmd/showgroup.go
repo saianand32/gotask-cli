@@ -4,10 +4,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var lsCmd = &cobra.Command{
-	Use:   "ls",
-	Short: "List all tasks in current group",
-	Long:  "List all tasks in current group",
+var showGroupCmd = &cobra.Command{
+	Use:   "showgrp",
+	Short: "list all groups",
+	Long:  "list all groups",
 	Args:  cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		fs, err := fc.FileStorage()
@@ -16,8 +16,7 @@ var lsCmd = &cobra.Command{
 		}
 
 		ge := fc.GroupsExecutor(fs)
-		te := fc.TasksExecutor(fs, ge)
-		if err = te.List(); err != nil {
+		if err = ge.ListGroups(); err != nil {
 			return err
 		}
 
