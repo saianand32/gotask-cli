@@ -14,6 +14,7 @@ type GroupsExecutor interface {
 	GetCurrentGroup() (string, error)
 	ListGroups() error
 	CreateGroup(group string) error
+	DropGroup(group string) error
 }
 
 type groups struct {
@@ -95,5 +96,35 @@ func (g *groups) CreateGroup(group string) error {
 		return fmt.Errorf("error checking group file: %v", err)
 	}
 
+	return nil
+}
+
+func (g *groups) DropGroup(group string) error {
+
+	fileName := fmt.Sprintf("%s/%s.json", g.fs.GetDataFolder(), strings.ToLower(group))
+
+	if _, err := os.Stat(fileName); os.IsNotExist(err) {
+		return fmt.Errorf("no group exist named : %v", group)
+	}
+
+	err := os.Remove(fileName)
+	if err != nil {
+		fmt.Printf("Error deleting file: %v\n", err)
+		return err
+	}
+
+	cur_group, err := g.GetCurrentGroup()
+	if err != nil {
+		return fmt.Errorf("fetching current group")
+	}
+
+	if strings.EqualFold(cur_group, group) {
+		data := []byte("")
+		err = os.WriteFile(g.fs.GetGroupFile(), data, 0644)
+		if err != nil {
+			return fmt.Errorf("couldn't write to file: %v", err)
+		}
+	}
+	fmt.Println("success: Dropped group - ", group)
 	return nil
 }
