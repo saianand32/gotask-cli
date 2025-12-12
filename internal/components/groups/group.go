@@ -14,6 +14,7 @@ type GroupsExecutor interface {
 	GetCurrentGroup() (string, error)
 	ListGroups() error
 	CreateGroup(group string) error
+	TruncateGroup(group string) error
 	DropGroup(group string) error
 }
 
@@ -96,6 +97,24 @@ func (g *groups) CreateGroup(group string) error {
 		return fmt.Errorf("error checking group file: %v", err)
 	}
 
+	return nil
+}
+
+func (g *groups) TruncateGroup(group string) error {
+
+	fileName := fmt.Sprintf("%s/%s.json", g.fs.GetDataFolder(), strings.ToLower(group))
+
+	if _, err := os.Stat(fileName); os.IsNotExist(err) {
+		return fmt.Errorf("no group exist named : %v", group)
+	}
+
+	data := []byte("[]")
+	err := os.WriteFile(fileName, data, 0644)
+	if err != nil {
+		fmt.Printf("Error truncating file: %v\n", err)
+		return err
+	}
+	fmt.Println("success: Truncated group - ", group)
 	return nil
 }
 

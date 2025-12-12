@@ -26,6 +26,7 @@ func init() {
 	// - group commands -
 	rootCmd.AddCommand(useGroupCmd)
 	rootCmd.AddCommand(showGroupCmd)
+	rootCmd.AddCommand(truncateGroupCmd)
 	rootCmd.AddCommand(dropGroupCmd)
 
 	// - task commands -
