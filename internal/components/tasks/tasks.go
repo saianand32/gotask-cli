@@ -14,6 +14,7 @@ import (
 
 type TasksExecutor interface {
 	Add(task string) error
+	Complete(task string) error
 	List() error
 }
 
@@ -70,6 +71,35 @@ func (t *tasks) Add(task string) error {
 	}
 
 	return nil
+}
+
+// Complete marks a todo item as completed by setting the Done field to true
+// and updating the CompletedAt field with the current time.
+// It searches for the todo item using its ID and returns an error if not found.
+func (t *tasks) Complete(id string) error {
+	group, err := t.ge.GetCurrentGroup()
+	if err != nil {
+		return err
+	}
+	fileName := fmt.Sprintf("%s/%s.json", t.fs.GetDataFolder(), group)
+
+	data, err := t.fs.Read(fileName)
+	if err != nil {
+		return err
+	}
+	t.items = append(t.items, data...)
+
+	for i, todo := range t.items {
+		if todo.Id == id {
+			if todo.Done {
+				return fmt.Errorf("todo with id %s already done", id)
+			}
+			t.items[i].Done = true
+			t.items[i].CompletedAt = time.Now()
+			return t.fs.Write(fileName, t.items)
+		}
+	}
+	return fmt.Errorf("todo with id %s not found", id)
 }
 
 // Print displays the todos in a formatted table.

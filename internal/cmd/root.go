@@ -31,5 +31,6 @@ func init() {
 
 	// - task commands -
 	rootCmd.AddCommand(addCmd)
+	rootCmd.AddCommand(doneCmd)
 	rootCmd.AddCommand(lsCmd)
 }
