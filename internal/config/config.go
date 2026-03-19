@@ -16,12 +16,12 @@ type Config struct {
 }
 
 func Default(version string) (*Config, error) {
-	exePath, err := os.Executable()
+	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return nil, err
 	}
 
-	baseDir := filepath.Dir(exePath)
+	baseDir := filepath.Join(homeDir, ".gotask")
 
 	return &Config{
 		StoreFolder:  filepath.Join(baseDir, constants.StoreFolder),
